@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Cards>
+    <RABB>
+        <Name>Rabbit</Name>
+        <Mana-Cost>1</Mana-Cost>
+        <Base-Attack>1</Base-Attack>
+        <Base-Health>2</Base-Health>
+        <Element>earth</Element>
+        <Card-Type>beast</Card-Type>
+    </RABB>
+    <UPRI>
+        <Name>Undead Priest</Name>
+        <Mana-Cost>4</Mana-Cost>
+        <Base-Attack>3</Base-Attack>
+        <Base-Health>7</Base-Health>
+        <Element>earth</Element>
+        <Card-Type>beast:magic</Card-Type>
+    </UPRI>
+    <TPSY>
+        <Name>Trainee Psychic</Name>
+        <Mana-Cost>1</Mana-Cost>
+        <Base-Attack>2</Base-Attack>
+        <Base-Health>1</Base-Health>
+        <Element>earth</Element>
+        <Card-Type>magic</Card-Type>
+    </TPSY>
+    <GSOL>
+        <Name>Grass Soldier</Name>
+        <Mana-Cost>3</Mana-Cost>
+        <Base-Attack>3</Base-Attack>
+        <Base-Health>5</Base-Health>
+        <Element>earth</Element>
+        <Card-Type>warrior</Card-Type>
+    </GSOL>
+    <CTHF>
+        <Name>Countryside Theif</Name>
+        <Mana-Cost>4</Mana-Cost>
+        <Base-Attack>2</Base-Attack>
+        <Base-Health>4</Base-Health>
+        <Element>earth</Element>
+        <Card-Type>rouge</Card-Type>
+    </CTHF>
+    <GLBR>
+        <Name>Grassland Boar</Name>
+        <Mana-Cost>5</Mana-Cost>
+        <Base-Attack>3</Base-Attack>
+        <Base-Health>9</Base-Health>
+        <Element>earth</Element>
+        <Card-Type>beast:tank</Card-Type>
+    </GLBR>
+    <HBDR>
+        <Name>Herbal Doctor</Name>
+        <Mana-Cost>3</Mana-Cost>
+        <Base-Attack>1</Base-Attack>
+        <Base-Health>4</Base-Health>
+        <Element>earth</Element>
+        <Card-Type>healer</Card-Type>
+    </HBDR>
+    <CKNI>
+        <Name>Countryside Knight</Name>
+        <Mana-Cost>5</Mana-Cost>
+        <Base-Attack>5</Base-Attack>
+        <Base-Health>5</Base-Health>
+        <Element>earth</Element>
+        <Card-Type>warrior</Card-Type>
+    </CKNI>
+    <PBAT>
+        <Name>Psychic Bat</Name>
+        <Mana-Cost>2</Mana-Cost>
+        <Base-Attack>3</Base-Attack>
+        <Base-Health>2</Base-Health>
+        <Element>earth</Element>
+        <Card-Type>beast:magic</Card-Type>
+    </PBAT>
+    <RMAN>
+        <Name>Rat Man</Name>
+        <Mana-Cost>4</Mana-Cost>
+        <Base-Attack>5</Base-Attack>
+        <Base-Health>3</Base-Health>
+        <Element>earth</Element>
+        <Card-Type>beast:warrior</Card-Type>
+    </RMAN>
+    <HSHM>
+        <Name>Hardened Shaman</Name>
+        <Mana-Cost>5</Mana-Cost>
+        <Base-Attack>3</Base-Attack>
+        <Base-Health>5</Base-Health>
+        <Element>earth</Element>
+        <Card-Type>healer:warrior</Card-Type>
+    </HSHM>
+    <GGOB>
+        <Name>Grass Goblin</Name>
+        <Mana-Cost>2</Mana-Cost>
+        <Base-Attack>3</Base-Attack>
+        <Base-Health>3</Base-Health>
+        <Element>earth</Element>
+        <Card-Type>beast:rouge</Card-Type>
+    </GGOB>
+    <FLIZ>
+        <Name>Fire Lizard</Name>
+        <Mana-Cost>1</Mana-Cost>
+        <Base-Attack>1</Base-Attack>
+        <Base-Health>2</Base-Health>
+        <Element>fire</Element>
+        <Card-Type>beast</Card-Type>
+    </FLIZ>
+    <FZOM>
+        <Name>Flaming Zombie</Name>
+        <Mana-Cost>4</Mana-Cost>
+        <Base-Attack>3</Base-Attack>
+        <Base-Health>7</Base-Health>
+        <Element>fire</Element>
+        <Card-Type>beast:magic</Card-Type>
+    </FZOM>
+    <MTOD>
+        <Name>Magma Toad</Name>
+        <Mana-Cost>1</Mana-Cost>
+        <Base-Attack>3</Base-Attack>
+        <Base-Health>1</Base-Health>
+        <Element>fire</Element>
+        <Card-Type>beast</Card-Type>
+    </MTOD>
+    <FSOL>
+        <Name>Fire Soldier</Name>
+        <Mana-Cost>3</Mana-Cost>
+        <Base-Attack>3</Base-Attack>
+        <Base-Health>5</Base-Health>
+        <Element>fire</Element>
+        <Card-Type>warrior</Card-Type>
+    </FSOL>
+    <SARS>
+        <Name>Serial Arsonist</Name>
+        <Mana-Cost>4</Mana-Cost>
+        <Base-Attack>3</Base-Attack>
+        <Base-Health>3</Base-Health>
+        <Element>fire</Element>
+        <Card-Type>rouge</Card-Type>
+    </SARS>
+    <EFHL>
+        <Name>Eastern Fire Healer</Name>
+        <Mana-Cost>3</Mana-Cost>
+        <Base-Attack>1</Base-Attack>
+        <Base-Health>4</Base-Health>
+        <Element>fire</Element>
+        <Card-Type>healer</Card-Type>
+    </EFHL>
+    <FSPN>
+        <Name>Fire Spinner</Name>
+        <Mana-Cost>5</Mana-Cost>
+        <Base-Attack>3</Base-Attack>
+        <Base-Health>9</Base-Health>
+        <Element>fire</Element>
+        <Card-Type>tank</Card-Type>
+    </FSPN>
+    <FGOB>
+        <Name>Fire Goblin</Name>
+        <Mana-Cost>2</Mana-Cost>
+        <Base-Attack>3</Base-Attack>
+        <Base-Health>3</Base-Health>
+        <Element>fire</Element>
+        <Card-Type>beast:rouge</Card-Type>
+    </FGOB>
+    <SMAG>
+        <Name>Scorched Magician</Name>
+        <Mana-Cost>2</Mana-Cost>
+        <Base-Attack>3</Base-Attack>
+        <Base-Health>3</Base-Health>
+        <Element>fire</Element>
+        <Card-Type>magic</Card-Type>
+    </SMAG>
+    <FBAT>
+        <Name>Flaming Bat</Name>
+        <Mana-Cost>4</Mana-Cost>
+        <Base-Attack>5</Base-Attack>
+        <Base-Health>2</Base-Health>
+        <Element>fire</Element>
+        <Card-Type>beast:magic</Card-Type>
+    </FBAT>
+    <FMAN>
+        <Name>Fire Man</Name>
+        <Mana-Cost>2</Mana-Cost>
+        <Base-Attack>3</Base-Attack>
+        <Base-Health>3</Base-Health>
+        <Element>fire</Element>
+        <Card-Type>beast:warrior</Card-Type>
+    </FMAN>
+    <SHLR>
+        <Name>Scorched Healer</Name>
+        <Mana-Cost>5</Mana-Cost>
+        <Base-Attack>3</Base-Attack>
+        <Base-Health>5</Base-Health>
+        <Element>fire</Element>
+        <Card-Type>healer:warrior</Card-Type>
+    </SHLR>
+</Cards>
