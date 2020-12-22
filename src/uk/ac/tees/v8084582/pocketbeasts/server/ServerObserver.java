@@ -6,8 +6,13 @@
 package uk.ac.tees.v8084582.pocketbeasts.server;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import uk.ac.tees.v8084582.pocketbeasts.networkutil.Command;
+import uk.ac.tees.v8084582.pocketbeasts.networkutil.Message;
 
 
 /**
@@ -20,12 +25,26 @@ public abstract class ServerObserver implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-        log("New command recieved to Observer: " + arg);
-        try {
-            ServerHandler.parseResponse((String)arg);
-        } catch (IOException ex) {
-            log("ServerObserver threw error: " + ex.toString());
-        }
+        log("Recieved from client: " + arg);
+            if(arg instanceof List){
+                List list = (List) arg;
+                for(Object e: list){
+                    if(e instanceof Message){
+                        try {
+                            ServerHandler.parseMessage(list);
+                        } catch (IOException ex) {
+                            log("Error sending observer update: " + ex.toString());
+                        }
+                    }
+                }
+            } else if(arg instanceof Command){
+            try {
+                ServerHandler.parseCommand((Command) arg);
+            } catch (IOException ex) {
+                log("Error parsing command: " + ex);
+            }
+                
+            }
     }
 
     public static void log(String msg) {

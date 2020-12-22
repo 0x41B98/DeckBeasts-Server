@@ -24,7 +24,7 @@ import org.w3c.dom.*;
  *
  * @author v8084582
  */
-public class serverXmlHandler {
+public class ServerXmlHandler {
 
     private static File fXmlServerFile;
     private static File fXmlCardFile;
@@ -36,8 +36,40 @@ public class serverXmlHandler {
         System.out.println(msg);
     }
 
-    private static void createServerXMLFile() {
+    private static void createServerXMLFile() throws IOException {
         fXmlServerFile = new File("server/Server.xml");
+        fXmlServerFile.createNewFile();
+        Document serverFile;
+        Element e = null;
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        try {
+            //use factory to get new instance of DocumentBuilder
+            DocumentBuilder db = dbf.newDocumentBuilder();
+
+            //create new instance of the document
+            serverFile = db.newDocument();
+
+            //create root element of card list
+            Element rootElement = serverFile.createElement("Users");
+
+            serverFile.appendChild(rootElement);
+            try {
+                Transformer tr = TransformerFactory.newInstance().newTransformer();
+                tr.setOutputProperty(OutputKeys.INDENT, "yes");
+                tr.setOutputProperty(OutputKeys.METHOD, "xml");
+                tr.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+                tr.setOutputProperty(OutputKeys.STANDALONE, "true");
+                tr.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+
+                //send Document to file
+                tr.transform(new DOMSource(serverFile), new StreamResult(new FileOutputStream(fXmlServerFile.getAbsolutePath())));
+            } catch (IOException | TransformerException ex) {
+                log("[!] XML Creation Error(folder permission error?): " + ex.toString());
+            }
+
+        } catch (ParserConfigurationException pce) {
+            log("[!] Error Building XML Internals: " + pce.toString());
+        }
 
     }
 
@@ -181,6 +213,46 @@ public class serverXmlHandler {
 
     }
 
+    public static Boolean addUser(String username, String hashpassword) throws SAXException, IOException, ParserConfigurationException, TransformerConfigurationException, TransformerException {
+        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+        Document document = documentBuilder.parse("server/Server.xml");
+
+        Element root = document.getDocumentElement();
+
+        Element newUsr = document.createElement("user");
+
+        Element fXmlusername = document.createElement("username");
+        fXmlusername.appendChild(document.createTextNode(username));
+        newUsr.appendChild(fXmlusername);
+
+        Element fXmlpass = document.createElement("password");
+        fXmlpass.appendChild(document.createTextNode(hashpassword));
+        newUsr.appendChild(fXmlpass);
+
+        Element usrWins = document.createElement("wins");
+        usrWins.appendChild(document.createTextNode("0"));
+        newUsr.appendChild(usrWins);
+
+        Element usrLosses = document.createElement("losses");
+        usrLosses.appendChild(document.createTextNode("0"));
+        newUsr.appendChild(usrLosses);
+
+        root.appendChild(newUsr);
+
+        DOMSource source = new DOMSource(document);
+
+        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        Transformer transformer = transformerFactory.newTransformer();
+        StreamResult result = new StreamResult("server/Server.xml");
+        transformer.transform(source, result);
+
+        //String[] test = getByUsername(username);
+        //log("add user test: " + test[1]);
+        return false;
+
+    }
+
     public static void initialLoadXml() {
         fXmlServerFile = new File("server/Server.xml");
         fXmlCardFile = new File("server/CardList.xml");
@@ -190,6 +262,7 @@ public class serverXmlHandler {
                 Files.createDirectories(path);
             }
             if (!fXmlServerFile.exists()) {
+                createServerXMLFile();
             }
             if (!fXmlCardFile.exists()) {
                 createCardXMLFile();
@@ -197,42 +270,45 @@ public class serverXmlHandler {
         } catch (IOException e) {
             log("[!] An error occurred creating Server.xml file: \n" + e.getMessage());
         }
-        readServerXml();
-        readCardXml();
-        updateCardList();
+        readServerXml(true);
+        readCardXml(true);
 
     }
 
-    public static void readServerXml() {
+    public static void readServerXml(Boolean isFirstLoad) {
         try {
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             parsedServerXml = dBuilder.parse(fXmlServerFile);
             parsedServerXml.getDocumentElement().normalize();
-            log("[+] Loaded Server.xml");
+            if (isFirstLoad) {
+                log("[+] Loaded Server.xml");
+            }
         } catch (IOException | ParserConfigurationException | SAXException e) {
             log("Error parsing Server.xml: \n" + e.toString());
         }
 
     }
 
-    public static void readCardXml() {
+    public static void readCardXml(Boolean isFirstLoad) {
         try {
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             parsedCardXml = dBuilder.parse(fXmlCardFile);
             parsedCardXml.getDocumentElement().normalize();
-            log("[+] Refreshed CardList.xml");
+            if (isFirstLoad) {
+                log("[+] Loaded CardList.xml");
+            }
         } catch (IOException | ParserConfigurationException | SAXException e) {
             log("[!] Error parsing CardList.xml: \n" + e.toString());
         }
     }
 
     public static void updateCardList() {
-        if(scd.cardList.isEmpty() == false){
+        if (scd.cardList.isEmpty() == false) {
             scd.removeAll(scd.cardList);
         }
-        readCardXml();
+        readCardXml(false);
         NodeList nl;
         nl = parsedCardXml.getElementsByTagName("Cards").item(0).getChildNodes();
         String cardList = "";
@@ -251,30 +327,34 @@ public class serverXmlHandler {
                         cardRef++;
                         cardAttArr[cardRef] = attList.item(j).getTextContent();
                     }
-                    
+
                 }
                 scd.add(new Card(cardAttArr[0], cardAttArr[1], Integer.parseInt(cardAttArr[2]), Integer.parseInt(cardAttArr[3]), Integer.parseInt(cardAttArr[4]), cardAttArr[5], cardAttArr[6]));
-                
+
                 //cardList = cardList + Card + "|";
             }
         }
-         log("" + scd.cardList.size());
+        log("" + scd.cardList.size());
     }
 
     public static String[] getByUsername(String username) {
-        NodeList nList = parsedServerXml.getElementsByTagName("user");
-        for (int temp = 0; temp < nList.getLength(); temp++) {
-            Node nNode = nList.item(temp);
+        NodeList nListRoot = parsedServerXml.getElementsByTagName("Users");
+        for (int temp = 0; temp < nListRoot.getLength(); temp++) {
+            Node nNode = nListRoot.item(temp);
             if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-                Element eElement = (Element) nNode;
-                if (eElement.getElementsByTagName("username").item(0).getTextContent().equals(username)) {
-                    String name = eElement.getElementsByTagName("name").item(0).getTextContent();
-                    String password = eElement.getElementsByTagName("password").item(0).getTextContent();
-                    String wins = eElement.getElementsByTagName("wins").item(0).getTextContent();
-                    String losses = eElement.getElementsByTagName("losses").item(0).getTextContent();
-                    String status = eElement.getElementsByTagName("status").item(0).getTextContent();
-                    String[] attributes = {name, username, password, wins, losses, status};
-                    return attributes;
+                NodeList nListUsers = nNode.getChildNodes();
+                for (int i = 0; i < nListUsers.getLength(); i++) {
+                    Node nNodeUser = nListUsers.item(i);
+                    if (nNodeUser.getNodeType() == Node.ELEMENT_NODE) {
+                        Element eElement = (Element) nNodeUser;
+                        if (eElement.getElementsByTagName("username").item(0).getTextContent().equals(username)) {
+                            String hashedpw = eElement.getElementsByTagName("password").item(0).getTextContent();
+                            String wins = eElement.getElementsByTagName("wins").item(0).getTextContent();
+                            String losses = eElement.getElementsByTagName("losses").item(0).getTextContent();
+                            String[] attributes = {username, hashedpw, wins, losses};
+                            return attributes;
+                        }
+                    }
                 }
             }
         }

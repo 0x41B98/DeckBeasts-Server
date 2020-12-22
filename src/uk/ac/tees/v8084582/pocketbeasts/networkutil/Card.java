@@ -22,7 +22,7 @@ import java.io.Serializable;
  * @author James Fairbairn
  * @author Steven Mead
  */
-public class Card implements Serializable {
+public class Card implements Serializable, Comparable {
 
     private final String id;
     private final String name;
@@ -92,5 +92,10 @@ public class Card implements Serializable {
     */
     public String getElement() {
         return this.element;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        return 0;
     }
 }

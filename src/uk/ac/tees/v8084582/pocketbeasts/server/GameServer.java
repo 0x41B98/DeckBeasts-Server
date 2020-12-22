@@ -19,6 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import uk.ac.tees.v8084582.pocketbeasts.networkutil.Message;
 
 /**
@@ -29,9 +31,9 @@ public class GameServer {
 
     private static GameServer INSTANCE;
     private ServerSocket serverSocket;
-    public serverXmlHandler fXmlHandler;
-    
-    public ServerSocket getSocket(){
+    public ServerXmlHandler fXmlHandler;
+
+    public ServerSocket getSocket() {
         return serverSocket;
     }
 
@@ -39,7 +41,7 @@ public class GameServer {
     private GameServer(int port) throws IOException {
         startServer(port);
     }
-    
+
     private void startServer(int port) throws IOException {
         serverSocket = new ServerSocket(port);
     }
@@ -79,7 +81,7 @@ public class GameServer {
         private final Socket clientSocket;
         private int clientNumber;
 
-        public Socket getSocket(){
+        public Socket getSocket() {
             return clientSocket;
         }
 
@@ -91,16 +93,17 @@ public class GameServer {
 
         @Override
         public void run() {
-            ObjectInputStream clientResponse;
+            Object clientResponse;
             ServerHandler obServerHandler = new ServerHandler();
+            ObjectOutputStream objectOutput = null;
             this.addObserver(obServerHandler);
             try {
                 OutputStream outputStream = clientSocket.getOutputStream();
                 InputStream inputStream = clientSocket.getInputStream();
                 InputStream sIn = clientSocket.getInputStream();
                 OutputStream sOut = clientSocket.getOutputStream();
-                
-                ObjectOutputStream objectOutput = new ObjectOutputStream(sOut);
+
+                objectOutput = new ObjectOutputStream(sOut);
 
                 //welcome client upon connection
                 List<Message> messages = new ArrayList<>();
@@ -108,23 +111,42 @@ public class GameServer {
                 log("Sending welcome ack");
                 objectOutput.writeObject(messages);
 
-                while (true) {
+                boolean isConnected = true;
+                while (isConnected) {
                     obServerHandler.outputStream = sOut;
-                    clientResponse = new ObjectInputStream(sIn);
-                    this.changeStateTo(clientResponse);
+                    try {
+                        clientResponse = new ObjectInputStream(sIn).readObject();
+                        this.changeStateTo(clientResponse);
+                    } catch (IOException eof) {
+                        objectOutput.close();
+                        isConnected=false;
+                        log("Error Handling Client: " + eof);
+                    }
                 }
             } catch (IOException e) {
                 log("Error handling client #" + clientNumber + ": " + e);
-            } finally {
+                try {
+                    objectOutput.close();
+                } catch (IOException ex) {
+                    log("Error closing ObjectOutputStream: " + ex.toString());
+                }
+
+            } catch (ClassNotFoundException ex) {
+                log("Object class not found(in ClientHandler): " + ex);
+
+            }finally {
                 try {
                     clientSocket.close();
-                } catch (IOException e) {
-                    log("Error closing the client connection: " + e);
+                } catch (IOException ex) {
+                    log("Error closing the client connection: " + ex);
                 }
-            }
+            
             log("Client #" + clientNumber + " has terminated the connection");
             this.deleteObserver(obServerHandler);
         }
+            
+        }
+        
 
     }
 
@@ -136,7 +158,7 @@ public class GameServer {
     }
 
     public static void main(String[] args) throws IOException {
-        serverXmlHandler.initialLoadXml();
+        ServerXmlHandler.initialLoadXml();
         getInstance();
         try {
             getInstance().acceptClients();
